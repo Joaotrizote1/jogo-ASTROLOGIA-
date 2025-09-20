@@ -1,10 +1,13 @@
 import random
 
 class JogoMarte:
-    def __init__(self):
+    def __init__(self, num_jogadores=4):
         self.dia = 1
         self.max_dias = 15
-        self.jogadores = [{"nome": "Astronauta 1", "vida": 3, "oxigenio": 3, "agua": 3, "comida": 3, "energia": 2}]
+        self.jogadores = [
+            {"nome": f"Astronauta {i+1}", "vida": 3, "oxigenio": 3, "agua": 3, "comida": 3, "energia": 2}
+            for i in range(num_jogadores)
+        ]
         self.eventos = [
             "Tempestade de poeira! Todos gastam +1 Energia.",
             "Falha no traje! Perde 1 Oxigênio.",
@@ -22,15 +25,16 @@ class JogoMarte:
         evento = random.choice(self.eventos)
         print(f"\n📢 Evento: {evento}")
         for j in self.jogadores:
-            if "Energia" in evento:
-                j["energia"] -= 1
-            if "Oxigênio" in evento:
-                j["oxigenio"] -= 1
-            if "Água" in evento:
-                j["agua"] += 2
+            if j["vida"] > 0:
+                if "Energia" in evento:
+                    j["energia"] -= 1
+                if "Oxigênio" in evento:
+                    j["oxigenio"] -= 1
+                if "Água" in evento:
+                    j["agua"] += 2
 
     def acoes(self, jogador):
-        print("\nEscolha sua ação:")
+        print(f"\n🎮 Turno de {jogador['nome']}")
         print("1 - Explorar (chance de ganhar recurso)")
         print("2 - Descansar (+1 Energia)")
         print("3 - Construir (gasta 1 de cada recurso, mas prepara resgate)")
@@ -52,7 +56,7 @@ class JogoMarte:
                 jogador["agua"] -= 1
                 jogador["comida"] -= 1
                 jogador["energia"] -= 1
-                print("Você ajudou a montar a Antena de Resgate!")
+                print("🛠️ Você ajudou a montar a Antena de Resgate!")
             else:
                 print("❌ Recursos insuficientes para construir!")
 
@@ -77,10 +81,10 @@ class JogoMarte:
 
         print("\n🏁 Fim do jogo!")
         if any(j["vida"] > 0 for j in self.jogadores):
-            print("🎉 Você sobreviveu em Marte!")
+            print("🎉 Sobreviventes conseguiram resistir em Marte!")
         else:
             print("💀 Todos morreram...")
 
-# Rodar o jogo
-jogo = JogoMarte()
+# Rodar o jogo com 4 jogadores
+jogo = JogoMarte(num_jogadores=4)
 jogo.jogar()
